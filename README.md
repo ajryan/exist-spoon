@@ -21,4 +21,4 @@ To configure this app as a user-defined tool in ToDoList:
 3. New Tool
 4. Enter tool name (e.g. exist.io)
 4. Path: `C:\Program Files\dotnet\dotnet.exe`
-5. Arguments: <path to exist-spoon.dll> "$(pathname)"
+5. Arguments: `<path to exist-spoon.dll> "$(pathname)"`
