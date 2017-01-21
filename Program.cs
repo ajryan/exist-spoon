@@ -22,14 +22,14 @@ namespace ExistSpoon
 
             var tdlPath = args[0];
 
-            ProgressAggregator.Publish($"Submitting completed task count from {tdlPath} for {DateTime.Today:d}");
+            ProgressAggregator.Publish($"Submitting completed task count from {tdlPath}");
 
             var authenticator = new OpenAuthenticator(ClientId, ClientSecret, RedirectUri);
 
             string oauthToken = authenticator.Authenticate();
-            int completedCount = new TdlFile(tdlPath).ParseCompletedCount();
+            var completions = new TdlFile(tdlPath).PerseCompletions();
 
-            new ExistClient(oauthToken).SubmitCompletion(completedCount);
+            new ExistClient(oauthToken).SubmitCompletions(completions);
 
             while (authenticator.FlushingProgress)
                 Thread.Sleep(10);

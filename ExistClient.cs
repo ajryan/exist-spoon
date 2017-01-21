@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -16,18 +18,16 @@ namespace ExistSpoon
             _oauthToken = oauthToken;
         }
 
-        public void SubmitCompletion(int completedCount)
+        public void SubmitCompletions(List<DateCompletionCount> completions)
         {
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _oauthToken);
 
-                ProgressAggregator.Publish($"Submitting {completedCount} completed task count.");
+                ProgressAggregator.Publish($"Submitting completion updates.");
 
-                var attributeUpdateRequests = new[]
-                {
-                    new AttributeUpdateRequest("tasks_completed", DateTime.Today, completedCount)
-                };
+                var attributeUpdateRequests = completions.Select(
+                    completion => new AttributeUpdateRequest("tasks_completed", completion.Date, completion.CompletedCount)).ToArray();
 
                 var attributeUpdateResponseMessage = client.PostAsync(
                     new Uri("https://exist.io/api/1/attributes/update/"),
